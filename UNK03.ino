@@ -206,7 +206,7 @@ void TurnLeft() {
   while (1) {
     Motor(-LTurnSpdL, LTurnSpdR);
     ReadCalibrate();
-    if (F[1] >= 500) {
+    if (F[0] >= 500) {
       MotorStop();
       break;
     }
@@ -219,7 +219,7 @@ void TurnRight() {
   while (1) {
     Motor(RTurnSpdL, -RTurnSpdR);
     ReadCalibrate();
-    if (F[6] >= 500) {
+    if (F[7] >= 500) {
       MotorStop();
       break;
     }
@@ -256,15 +256,15 @@ int readPosition(int Track, int noise) {
 
 void PID(int Speed, float Kp, float Kd) {
   int Pos = readPosition(300, 50);
-  int Error = Pos - 3500;
+  int Error = Pos - ((NUM_SENSORS - 1) * 1000 / 2);
   int PID_Value = (Kp * Error) + (Kd * (Error - LastError));
   LastError = Error;
   int LeftPower = Speed + PID_Value;
   int RightPower = Speed - PID_Value;
-  if (LeftPower > 255) LeftPower = MaxSpeed;
-  if (LeftPower < 0) LeftPower = MinSpeed;
-  if (RightPower > 255) RightPower = MaxSpeed;
-  if (RightPower < 0) RightPower = -MinSpeed;
+  if (LeftPower > MaxSpeed) LeftPower = MaxSpeed;
+  if (LeftPower < MinSpeed) LeftPower = MinSpeed;
+  if (RightPower > MaxSpeed) RightPower = MaxSpeed;
+  if (RightPower < MinSpeed) RightPower = MinSpeed;
   Motor(LeftPower, RightPower);
 }
 
@@ -290,9 +290,9 @@ void TrackSelect(int spd, char x) {
     TurnRight();
   }
     else if (x == 'L') {
-    Left(200,150);
+    Left(180,150);
   } else if (x == 'R') {
-    Right(200,150);
+    Right(180,150);
   }
 }
 
@@ -338,6 +338,17 @@ void TrackCrossL(int Speed, float Kp, float Kd, char select) {
     }
   }
   TrackSelect(Speed, select);
+}
+
+void TrackCrossLeftTime(int Speed, float Kp, float Kd, int delay) {
+  while (1) {
+    PID(Speed, Kp, Kd);
+    ReadCalibrate();
+    if (F[0] > 550 ) {
+      break;
+    }
+  }
+  Left(180 ,delay);
 }
 
 void TrackDistance(int Speed, float Kp, float Kd) {

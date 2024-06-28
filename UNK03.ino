@@ -301,9 +301,11 @@ void TrackCross(int Speed, float Kp, float Kd, char select) {
     PID(Speed, Kp, Kd);
     ReadCalibrate();
     if ((F[1] > 550 && F[6] > 550) || (F[0] > 550 && F[3] > 550) || (F[4] > 550 && F[7] > 550)) {
+	   
       break;
     }
   }
+Beep(10);
   TrackSelect(Speed, select);
 }
 
@@ -315,6 +317,7 @@ void TrackCrossC(int Speed, float Kp, float Kd, char select) {
       break;
     }
   }
+	 Beep(10);
   TrackSelect(Speed, select);
 }
 
@@ -326,6 +329,7 @@ void TrackCrossR(int Speed, float Kp, float Kd, char select) {
       break;
     }
   }
+	 Beep(10);
   TrackSelect(Speed, select);
 }
 
@@ -337,6 +341,7 @@ void TrackCrossL(int Speed, float Kp, float Kd, char select) {
       break;
     }
   }
+	 Beep(10);
   TrackSelect(Speed, select);
 }
 
@@ -357,6 +362,7 @@ void TrackDistance(int Speed, float Kp, float Kd) {
     ReadCalibrate();
     if (analogRead(A0) < 550) {
       MotorStop();
+	     Beep(10);
       break;
     }
   }
@@ -368,4 +374,5 @@ void TrackTime(int Speed, float Kp, float Kd, int TotalTime) {
   while (millis() <= EndTime) {
     PID(Speed, Kp, Kd);
   }
+	 Beep(10);
 }

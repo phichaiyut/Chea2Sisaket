@@ -368,6 +368,13 @@ void TrackDistance(int Speed, float Kp, float Kd) {
   }
 }
 
+void TrackDist() {
+  while (analogRead(A0) < 550) {
+      MotorStop();
+	     Beep(10);
+  }
+}
+
 void TrackTime(int Speed, float Kp, float Kd, int TotalTime) {
   unsigned long StartTime = millis();
   unsigned long EndTime = StartTime + TotalTime;
